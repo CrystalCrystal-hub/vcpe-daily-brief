@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#20BDA5">
+<link rel="manifest" href="app.webmanifest">
+<title>每日资讯工作台</title>
+<style>
+:root{--green:#20BDA5;--green-d:#138A76;--bg:#f4f6f8;--side:#ffffff;--txt:#1a1a1a;--muted:#8896a8;--line:#eceff2;}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--txt);background:var(--bg);}
+.layout{display:flex;height:100%;overflow:hidden;}
+.sidebar{width:220px;background:var(--side);border-right:1px solid var(--line);padding:18px 12px;flex-shrink:0;display:flex;flex-direction:column;}
+.brand{font-size:15px;font-weight:800;color:var(--green-d);padding:0 10px 14px;border-bottom:1px solid #eee;margin-bottom:14px;letter-spacing:.5px;}
+.nav-item{display:block;width:100%;text-align:left;border:none;background:none;cursor:pointer;font-size:15px;color:#37404a;padding:12px 10px;border-radius:8px;margin-bottom:6px;font-family:inherit;border-left:4px solid transparent;transition:.15s;}
+.nav-item:hover{background:#f3f7f9;}
+.nav-item.active{background:#eafaf6;color:var(--green-d);border-left-color:var(--green);font-weight:700;}
+.placeholder{margin-top:auto;padding:12px 10px;border:1px dashed #cfd8e0;border-radius:8px;font-size:12px;color:#9aa3ad;line-height:1.5;}
+.content{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;}
+.topbar{height:58px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-logo{font-size:15px;font-weight:800;color:var(--green-d);}
+.mobile-nav{display:none;align-items:center;gap:6px;}
+.mobile-nav .pill{font-size:13px;padding:7px 12px;border-radius:20px;background:#f4f6f8;color:#37404a;border:none;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.mobile-nav .pill.active{background:var(--green);color:#fff;font-weight:700;}
+.datebar{display:flex;align-items:center;gap:8px;}
+.datebar button{width:30px;height:30px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;font-size:15px;color:#37404a;display:flex;align-items:center;justify-content:center;}
+.datebar button:disabled{opacity:.35;cursor:not-allowed;}
+.datebar .dt{font-size:14px;font-weight:700;color:#16202b;min-width:88px;text-align:center;}
+.frame-wrap{flex:1;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;min-height:0;}
+.card{max-width:800px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);padding:18px 16px 36px;margin-bottom:12px;}
+.empty{text-align:center;padding:60px 20px;color:#9aa3ad;}
+.empty .icon{font-size:40px;margin-bottom:10px;}
+.empty .t{font-size:16px;font-weight:700;color:#37404a;margin-bottom:6px;}
+.between-cards{text-align:center;color:#9aa3ad;font-size:13px;margin:8px 0 16px;}
+.mobile-bottom-nav{display:none;}
+
+@media(max-width:768px){
+  .layout{flex-direction:column;height:100%;}
+  .sidebar{display:none;}
+  .topbar{height:52px;padding:0 12px;}
+  .topbar-logo{font-size:14px;}
+  .mobile-nav{display:none;}
+  .frame-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 78px;min-height:0;}
+  .card{padding:14px 12px 28px;}
+  .mobile-bottom-nav{
+    display:flex;
+    position:fixed;
+    left:0;right:0;bottom:0;
+    height:60px;
+    background:#fff;
+    border-top:1px solid var(--line);
+    z-index:100;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .bottom-tab{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    border:none;
+    background:none;
+    cursor:pointer;
+    font-family:inherit;
+    color:#8896a8;
+    font-size:11px;
+    padding:6px 0;
+    transition:.15s;
+  }
+  .bottom-tab .icon{font-size:20px;line-height:1;}
+  .bottom-tab.active{color:var(--green-d);font-weight:700;}
+  .bottom-tab.active .icon{filter:none;}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">每日资讯工作台</div>
+    <button class="nav-item active" data-period="overview">📋 今日总览</button>
+    <button class="nav-item" data-period="morning">🌅 每日早报</button>
+    <button class="nav-item" data-period="evening">🌙 每日晚报</button>
+    <div class="placeholder">更多板块即将上线</div>
+  </aside>
+  <main class="content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-logo">每日资讯工作台</span>
+        <div class="mobile-nav" id="mobileNav">
+          <button class="pill active" data-period="overview">总览</button>
+          <button class="pill" data-period="morning">早报</button>
+          <button class="pill" data-period="evening">晚报</button>
+        </div>
+      </div>
+      <div class="datebar">
+        <button id="prevDate" title="前一天">‹</button>
+        <span class="dt" id="dateDisplay">2026-09-07</span>
+        <button id="nextDate" title="后一天">›</button>
+      </div>
+    </div>
+    <div class="frame-wrap" id="frameWrap"></div>
+  </main>
+</div>
+
+<nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="底部导航">
+  <button class="bottom-tab active" data-period="overview">
+    <span class="icon">📋</span>
+    <span>总览</span>
+  </button>
+  <button class="bottom-tab" data-period="morning">
+    <span class="icon">🌅</span>
+    <span>早报</span>
+  </button>
+  <button class="bottom-tab" data-period="evening">
+    <span class="icon">🌙</span>
+    <span>晚报</span>
+  </button>
+</nav>
+
+<script>
+const names={overview:"今日总览",morning:"每日早报",evening:"每日晚报"};
+let period="overview";
+let dates=[];
+let files={};
+let currentDate="";
+const frameWrap=document.getElementById('frameWrap');
+const dateDisplay=document.getElementById('dateDisplay');
+const prevBtn=document.getElementById('prevDate');
+const nextBtn=document.getElementById('nextDate');
+const navs=document.querySelectorAll('.nav-item');
+const mobilePills=document.querySelectorAll('.pill');
+const bottomTabs=document.querySelectorAll('.bottom-tab');
+
+function setNav(p){
+  period=p;
+  navs.forEach(n=>n.classList.toggle('active',n.dataset.period===p));
+  mobilePills.forEach(n=>n.classList.toggle('active',n.dataset.period===p));
+  bottomTabs.forEach(n=>n.classList.toggle('active',n.dataset.period===p));
+}
+
+function renderEmpty(title,msg){
+  const div=document.createElement('div');
+  div.className='card empty';
+  div.innerHTML='<div class="icon">📭</div><div class="t">'+title+'</div><div>'+msg+'</div>';
+  return div;
+}
+
+async function loadHtml(date,per){
+  const path=`archive/${date}/${per}-${date}.html`;
+  try{
+    const r=await fetch(path,{cache:'no-store'});
+    if(!r.ok) return null;
+    const text=await r.text();
+    if(!text || text.trim().length<200) return null;
+    return text;
+  }catch(e){ return null; }
+}
+
+function shadowCard(html,per){
+  const host=document.createElement('div');
+  host.className='card';
+  const shadow=host.attachShadow({mode:'open'});
+  const parser=new DOMParser();
+  const doc=parser.parseFromString(html,'text/html');
+  const styles=Array.from(doc.querySelectorAll('style')).map(s=>s.outerHTML.replace(/:root\b/g,':host')).join('');
+  const wrap=doc.querySelector('.wrap');
+  const bodyHtml=wrap ? wrap.outerHTML : doc.body.innerHTML;
+  shadow.innerHTML=styles+'<div class="shadow-host">'+bodyHtml+'</div>';
+  return host;
+}
+
+let renderLock=false;
+async function render(){
+  if(renderLock) return;
+  renderLock=true;
+  frameWrap.innerHTML='';
+  dateDisplay.textContent=currentDate;
+  const idx=dates.indexOf(currentDate);
+  prevBtn.disabled=idx<=0;
+  nextBtn.disabled=idx>=dates.length-1 || idx===-1;
+
+  try{
+    if(period==='overview'){
+      const hasM=files[currentDate]&&files[currentDate].morning;
+      const hasE=files[currentDate]&&files[currentDate].evening;
+      if(hasM){
+        const html=await loadHtml(currentDate,'morning');
+        if(html) frameWrap.appendChild(shadowCard(html,'morning'));
+        else frameWrap.appendChild(renderEmpty('早报加载失败','请稍后重试'));
+      }else{
+        frameWrap.appendChild(renderEmpty('本日早报尚未生成','可在日期栏切换其他日期查看'));
+      }
+      if(hasE){
+        if(hasM){
+          const sep=document.createElement('div');
+          sep.className='between-cards'; sep.textContent='— 当日晚报 —';
+          frameWrap.appendChild(sep);
+        }
+        const html=await loadHtml(currentDate,'evening');
+        if(html) frameWrap.appendChild(shadowCard(html,'evening'));
+        else frameWrap.appendChild(renderEmpty('晚报加载失败','请稍后重试'));
+      }else if(hasM){
+        const sep=document.createElement('div');
+        sep.className='between-cards'; sep.textContent='— 本日晚报尚未生成 —';
+        frameWrap.appendChild(sep);
+      }
+    }else{
+      const has=files[currentDate]&&files[currentDate][period];
+      if(!has){
+        frameWrap.appendChild(renderEmpty('本日'+names[period]+'尚未生成','可在日期栏切换其他日期查看'));
+        return;
+      }
+      const html=await loadHtml(currentDate,period);
+      if(html) frameWrap.appendChild(shadowCard(html,period));
+      else frameWrap.appendChild(renderEmpty(names[period]+'加载失败','请稍后重试'));
+    }
+  }finally{
+    renderLock=false;
+  }
+}
+
+function load(p,date){
+  setNav(p);
+  if(date) currentDate=date;
+  render();
+}
+
+function changeDate(dir){
+  const idx=dates.indexOf(currentDate);
+  const next=idx+dir;
+  if(next>=0 && next<dates.length){
+    currentDate=dates[next];
+    render();
+  }
+}
+
+navs.forEach(n=>n.addEventListener('click',()=>load(n.dataset.period)));
+mobilePills.forEach(n=>n.addEventListener('click',()=>load(n.dataset.period)));
+bottomTabs.forEach(n=>n.addEventListener('click',()=>load(n.dataset.period)));
+prevBtn.addEventListener('click',()=>changeDate(-1));
+nextBtn.addEventListener('click',()=>changeDate(1));
+
+fetch('data.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{
+  dates=d.dates||[]; files=d.files||{}; currentDate=d.latest||dates[dates.length-1];
+  render();
+}).catch(()=>{
+  fetch('manifest.json',{cache:'no-store'}).then(r=>r.json()).then(m=>{
+    dates=m.dates||["2026-08-28"]; currentDate=m.latest||dates[dates.length-1];
+    dates.forEach(d=>{files[d]={morning:true,evening:true};});
+    render();
+  }).catch(()=>{
+    dates=["2026-08-28"]; files={"2026-08-28":{morning:true,evening:false}}; currentDate="2026-08-28";
+    render();
+  });
+});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

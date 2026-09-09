@@ -1,0 +1,7 @@
+# 排除项目私有记忆与自动化配置，避免公开到 GitHub Pages
+.workbuddy/
+
+# 排除版本控制与系统文件
+.git/
+.DS_Store
+Thumbs.db
