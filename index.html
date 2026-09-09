@@ -38,42 +38,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .mobile-bottom-nav{display:none;}
 
 @media(max-width:768px){
-  .layout{flex-direction:column;height:100%;}
-  .sidebar{display:none;}
+  .layout{flex-direction:row;height:100%;}
+  .sidebar{display:flex;width:140px;padding:16px 8px;border-right:1px solid var(--line);}
+  .brand{font-size:13px;padding:0 6px 10px;margin-bottom:10px;}
+  .nav-item{font-size:13px;padding:11px 6px;}
   .topbar{height:52px;padding:0 12px;}
   .topbar-logo{font-size:14px;}
   .mobile-nav{display:none;}
-  .frame-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 78px;min-height:0;}
+  .frame-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px;min-height:0;}
   .card{padding:14px 12px 28px;}
-  .mobile-bottom-nav{
-    display:flex;
-    position:fixed;
-    left:0;right:0;bottom:0;
-    height:60px;
-    background:#fff;
-    border-top:1px solid var(--line);
-    z-index:100;
-    padding-bottom:env(safe-area-inset-bottom);
-  }
-  .bottom-tab{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:3px;
-    border:none;
-    background:none;
-    cursor:pointer;
-    font-family:inherit;
-    color:#8896a8;
-    font-size:11px;
-    padding:6px 0;
-    transition:.15s;
-  }
-  .bottom-tab .icon{font-size:20px;line-height:1;}
-  .bottom-tab.active{color:var(--green-d);font-weight:700;}
-  .bottom-tab.active .icon{filter:none;}
+  .mobile-bottom-nav{display:none;}
 }
 </style>
 </head>
