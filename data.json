@@ -135,7 +135,7 @@
     },
     "2026-09-24": {
       "morning": true,
-      "evening": false
+      "evening": true
     }
   },
   "latest": "2026-09-24"
