@@ -299,7 +299,7 @@
       "evening": false
     },
     "2026-10-27": {
-      "morning": false,
+      "morning": true,
       "evening": true
     }
   },
