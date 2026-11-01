@@ -60,6 +60,10 @@
     "2026-10-25",
     "2026-10-26",
     "2026-10-27",
+    "2026-10-28",
+    "2026-10-29",
+    "2026-10-30",
+    "2026-10-31",
     "2026-11-01"
   ],
   "files": {
@@ -303,9 +307,25 @@
       "morning": true,
       "evening": true
     },
+    "2026-10-28": {
+      "morning": true,
+      "evening": true
+    },
+    "2026-10-29": {
+      "morning": true,
+      "evening": true
+    },
+    "2026-10-30": {
+      "morning": true,
+      "evening": true
+    },
+    "2026-10-31": {
+      "morning": true,
+      "evening": true
+    },
     "2026-11-01": {
       "morning": true,
-      "evening": false
+      "evening": true
     }
   },
   "latest": "2026-11-01"
