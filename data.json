@@ -345,7 +345,7 @@
     },
     "2026-11-05": {
       "morning": true,
-      "evening": false
+      "evening": true
     }
   },
   "latest": "2026-11-05"
