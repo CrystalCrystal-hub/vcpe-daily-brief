@@ -390,7 +390,7 @@
     },
     "2026-11-14": {
       "morning": true,
-      "evening": false
+      "evening": true
     }
   },
   "latest": "2026-11-14"
