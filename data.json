@@ -430,7 +430,7 @@
     },
     "2026-11-22": {
       "morning": true,
-      "evening": false
+      "evening": true
     }
   },
   "latest": "2026-11-22"
